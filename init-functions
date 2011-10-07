@@ -244,7 +244,7 @@ log_begin_msg () {
 # Sample usage:
 # log_daemon_msg "Starting GNOME Login Manager" "gdm"
 #
-# On Debian, would output "Starting GNOME Login Manager: gdm"
+# On Debian and Skerlet, would output "Starting GNOME Login Manager: gdm"
 # On Ubuntu, would output " * Starting GNOME Login Manager..."
 #
 # If the second argument is omitted, logging suitable for use with
@@ -252,7 +252,7 @@ log_begin_msg () {
 #
 # log_daemon_msg "Starting remote filesystem services"
 #
-# On Debian, would output "Starting remote filesystem services:"
+# On Debian and Skerlet, would output "Starting remote filesystem services:"
 # On Ubuntu, would output " * Starting remote filesystem services..."
 
 log_daemon_msg () {

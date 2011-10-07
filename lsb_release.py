@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-# LSB release detection module for Debian
+# LSB release detection module for Skerlet
+# (C) 2011 TOSHIBA Corporation <skerlet@swc.toshiba.co.jp>
 # (C) 2005-09 Chris Lawrence <lawrencc@debian.org>
 
 #    This package is free software; you can redistribute it and/or modify
@@ -26,17 +27,9 @@ import re
 # This should really be included in apt-cache policy output... it is already
 # in the Release file...
 RELEASE_CODENAME_LOOKUP = {
-    '1.1' : 'buzz',
-    '1.2' : 'rex',
-    '1.3' : 'bo',
-    '2.0' : 'hamm',
-    '2.1' : 'slink',
-    '2.2' : 'potato',
-    '3.0' : 'woody',
-    '3.1' : 'sarge',
-    '4.0' : 'etch',
-    '5.0' : 'lenny',
-    '6.0' : 'squeeze',
+    '1.0' : 'ashitaka',
+    '2.0' : 'baron',
+    '3.0' : 'clarisse',
     }
 
 TESTING_CODENAME = 'unknown.new.testing'
@@ -57,24 +50,14 @@ modnamere = re.compile(r'lsb-(?P<module>[a-z0-9]+)-(?P<arch>[^ ]+)(?: \(= (?P<ve
 def valid_lsb_versions(version, module):
     # If a module is ever released that only appears in >= version, deal
     # with that here
-    if version == '3.0':
-        return ['2.0', '3.0']
-    elif version == '3.1':
-        if module in ('desktop', 'qt4'):
-            return ['3.1']
-        else:
-            return ['2.0', '3.0', '3.1']
-    elif version == '3.2':
-        if module == 'desktop':
-            return ['3.1', '3.2']
-        elif module == 'qt4':
-            return ['3.1']
-        elif module in ('printing', 'languages', 'multimedia'):
-            return ['3.2']
-        elif module == 'cxx':
-            return ['3.0', '3.1', '3.2']
-        else:
-            return ['2.0', '3.0', '3.1', '3.2']
+    #if version == '3.0':
+    #    return ['2.0', '3.0']
+    #elif version == '3.1':
+    #    if module in ('desktop', 'qt4'):
+    #        return ['3.1']
+    #    else:
+    #        return ['2.0', '3.0', '3.1']
+    # .....
 
     return [version]
 
@@ -84,7 +67,7 @@ except NameError:
     import sets
     set = sets.Set
 
-# This is Debian-specific at present
+# This is Skerlet-specific at present
 def check_modules_installed():
     # Find which LSB modules are installed on this system
     output = commands.getoutput("dpkg-query -f '${Version} ${Provides}\n' -W %s 2>/dev/null" % PACKAGES)
@@ -146,9 +129,9 @@ def parse_apt_policy():
 
     return data
 
-def guess_release_from_apt(origin='Debian', component='main',
+def guess_release_from_apt(origin='Skerlet', component='main',
                            ignoresuites=('experimental'),
-                           label='Debian'):
+                           label='Skerlet'):
     releases = parse_apt_policy()
 
     if not releases:
@@ -173,7 +156,7 @@ def guess_release_from_apt(origin='Debian', component='main',
     return releases[0][1]
 
 def guess_debian_release():
-    distinfo = {'ID' : 'Debian'}
+    distinfo = {'ID' : 'Skerlet'}
 
     kern = os.uname()[0]
     if kern in ('Linux', 'Hurd', 'NetBSD'):
@@ -185,15 +168,15 @@ def guess_debian_release():
 
     distinfo['DESCRIPTION'] = '%(ID)s %(OS)s' % distinfo
 
-    if os.path.exists('/etc/debian_version'):
+    if os.path.exists('/etc/skerlet_version'):
         try:
-            release = open('/etc/debian_version').read().strip()
+            release = open('/etc/skerlet_version').read().strip()
         except IOError, msg:
-            print >> sys.stderr, 'Unable to open /etc/debian_version:', str(msg)
+            print >> sys.stderr, 'Unable to open /etc/skerlet_version:', str(msg)
             release = 'unknown'
             
         if not release[0:1].isalpha():
-            # /etc/debian_version should be numeric
+            # /etc/skerlet_version should be numeric
             codename = lookup_codename(release, 'n/a')
             distinfo.update({ 'RELEASE' : release, 'CODENAME' : codename })
         elif release.endswith('/sid'):
@@ -205,8 +188,8 @@ def guess_debian_release():
             distinfo['RELEASE'] = release
 
     # Only use apt information if we did not get the proper information
-    # from /etc/debian_version or if we don't have a codename
-    # (which will happen if /etc/debian_version does not contain a
+    # from /etc/skerlet_version or if we don't have a codename
+    # (which will happen if /etc/skerlet_version does not contain a
     # number but some text like 'testing/unstable' or 'lenny/sid')
     #
     # This is slightly faster and less error prone in case the user

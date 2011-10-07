@@ -1,3 +1,9 @@
+lsb (3.2-23.2squeeze1skerlet1) testing-proposed-updates; urgency=high
+
+  * Add Skerlet codename (ashitaka) to lsb_release.py.
+
+ -- Skerlet Project Team <skerlet@swc.toshiba.co.jp>  Fri, 07 Oct 2011 18:04:30 +0900
+
 lsb (3.2-23.2squeeze1) testing-proposed-updates; urgency=high
 
   * Add Debian 6.0 codename (squeeze) to lsb_release.py.  (Closes: #609325)
