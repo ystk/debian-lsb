@@ -1,3 +1,9 @@
+lsb (3.2-23.2squeeze1skerlet2) testing-proposed-updates; urgency=high
+
+  * Revert changes.
+
+ -- Skerlet Project Team <skerlet@swc.toshiba.co.jp>  Fri, 12 Oct 2011 13:06:00 +0900
+
 lsb (3.2-23.2squeeze1skerlet1) testing-proposed-updates; urgency=high
 
   * Add Skerlet codename (ashitaka) to lsb_release.py.
