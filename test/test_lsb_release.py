@@ -220,6 +220,27 @@ class TestLSBRelease(unittest.TestCase):
 
 	def test_guess_debian_release(self):
 		distinfo = get_arch_distinfo()
+		
+		# Test different dpkg origin with an fake "unstable releases" that ends in /sid, and an invalid apt-cache policy
+		distinfo['ID'] = rnd_string(5,12)
+		fn = 'test/dpkg_origins_default_' + rnd_string(5,5)
+		f = open(fn,'w')
+		f.write('Vendor: ' + distinfo['ID'] + "\n")
+		f.close()
+		os.environ['LSB_ETC_DPKG_ORIGINS_DEFAULT'] = fn
+		
+		distinfo['RELEASE']  = 'testing/unstable'
+		distinfo['DESCRIPTION'] = '%(ID)s %(OS)s %(RELEASE)s' % distinfo
+		fn2 = 'test/debian_version_' + rnd_string(5,12)
+		f = open(fn2,'w')
+		f.write(rnd_string(5,12) + '/sid')
+		f.close()
+		os.environ['LSB_ETC_DEBIAN_VERSION'] = fn2
+		self.assertEqual(lr.guess_debian_release(),distinfo)
+		os.remove(fn)
+		# Make sure no existing /etc/dpkg/origins/default is used
+		os.environ['LSB_ETC_DPKG_ORIGINS_DEFAULT'] = '/non-existant'
+		distinfo['ID'] = 'Debian'
 
 		# Test "stable releases" with numeric debian_versions
 		for rno in lr.RELEASE_CODENAME_LOOKUP:
@@ -325,8 +346,10 @@ class TestLSBRelease(unittest.TestCase):
 		f.write('testing/sid')
 		f.close()
 		os.environ['LSB_ETC_DEBIAN_VERSION'] = fn
+		os.environ['LSB_ETC_DPKG_ORIGINS_DEFAULT'] = ''
 		self.assertEqual(lr.get_distro_information(),supposed_output)
 		os.remove(fn)
+		os.environ.pop('LSB_ETC_DPKG_ORIGINS_DEFAULT')
 		os.environ.pop('LSB_ETC_DEBIAN_VERSION')
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ Build-Depends: debhelper (>> 7.0.50~),
  dpkg-dev (>= 1.10),
  python-all-dev (>= 2.6.6-6~),
 X-Python-Version: >= 2.6
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Homepage: http://www.linuxfoundation.org/collaborate/workgroups/lsb
 Vcs-Git: git://anonscm.debian.org/collab-maint/lsb.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/lsb.git
@@ -147,7 +147,7 @@ Depends: lsb-graphics (>= ${source:Version}),
  libxtst6,
  libxft2,
  xdg-utils,
- libnss3-1d,
+ libnss3,
  ${misc:Depends}
 # libqt4-sql-sqlite is Not strictly needed by LSB, but the tests want a valid database handler
 Recommends: libqt3-mt (>= 3:3.3.6)
@@ -227,7 +227,7 @@ Depends: lsb-core (>= ${source:Version}),
  libcupsimage2,
  foomatic-filters,
  ghostscript,
- ghostscript-cups,
+ cups-filters (>= 1.0.36) | ghostscript-cups,
  ${misc:Depends}
 Provides: lsb-printing-noarch, ${provides}
 Description: Linux Standard Base 4.1 Printing package
@@ -249,8 +249,8 @@ Description: Linux Standard Base 4.1 Printing package
 
 Package: lsb-security
 Architecture: any
-Depends: libnss3-1d,
- libnspr4-0d,
+Depends: libnss3,
+ libnspr4,
  ${misc:Depends}
 Recommends: lsb-core (>= ${source:Version}),
 Provides: lsb-security-noarch,
